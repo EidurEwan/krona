@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex">
+  <title>Returning to Krona</title>
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; margin: 24px 16px; max-width: 560px; }
+    textarea { width: 100%; box-sizing: border-box; height: 120px; font: 13px monospace; margin-top: 8px; }
+    [hidden] { display: none; }
+  </style>
+</head>
+<body>
+  <p id="desktop">Returning to Krona. Make sure it's running on this computer.</p>
+  <div id="phone" hidden>
+    <p>Returning to the Krona app. If it doesn't open, copy this address and paste it in Krona under Tools, Íslandsbanki, Paste a login address.</p>
+    <textarea id="address" readonly></textarea>
+  </div>
+  <script>
+    // The bank login result only passes through here on its way to the app on your own device.
+    const fromPhone = (new URLSearchParams(location.search).get('state') || '').startsWith('krona-mobile-');
+    if (fromPhone) {
+      document.getElementById('desktop').hidden = true;
+      document.getElementById('phone').hidden = false;
+      document.getElementById('address').value = location.href;
+      location.replace('krona://callback' + location.search);
+    } else {
+      location.replace('http://localhost:3456/callback' + location.search);
+    }
+  </script>
+</body>
+</html>
